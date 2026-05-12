@@ -5,9 +5,8 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities;
 /// <summary>
 /// Aggregate root for sale operations
 /// </summary>
-public class Sale : IEntity
+public class Sale : BaseEntity
 {
-    public Guid Id { get; private set; }
     public string SaleNumber { get; private set; } = string.Empty;
     public DateTime SaleDate { get; private set; }
     public string Customer { get; private set; } = string.Empty;
