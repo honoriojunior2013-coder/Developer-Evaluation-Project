@@ -1,7 +1,7 @@
 namespace Ambev.DeveloperEvaluation.Domain.Events;
 
 /// <summary>
-/// Marker interface for domain events
+/// Interface para eventos de domínio, garantindo que todos os eventos tenham uma data de ocorrência.
 /// </summary>
 public interface IDomainEvent
 {

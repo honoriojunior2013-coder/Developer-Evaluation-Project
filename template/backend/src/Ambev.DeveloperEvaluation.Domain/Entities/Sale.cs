@@ -1,4 +1,5 @@
 using Ambev.DeveloperEvaluation.Domain.Common;
+using Ambev.DeveloperEvaluation.Domain.Events;
 
 namespace Ambev.DeveloperEvaluation.Domain.Entities;
 
@@ -16,9 +17,17 @@ public class Sale : BaseEntity
 
     private readonly List<SaleItem> _items = new();
     public IReadOnlyCollection<SaleItem> Items => _items.AsReadOnly();
+    private readonly List<IDomainEvent> _domainEvents = new();
+    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
     // EF Core constructor
     private Sale() { }
+
+
+    public void ClearDomainEvents()
+    {
+        _domainEvents.Clear();
+    }
 
     /// <summary>
     /// Creates a new sale with items
@@ -53,6 +62,7 @@ public class Sale : BaseEntity
         }
 
         sale.CalculateTotalAmount();
+        sale._domainEvents.Add(new SaleCreatedEvent(sale.Id, DateTime.UtcNow));
         return sale;
     }
 
@@ -75,6 +85,7 @@ public class Sale : BaseEntity
             throw new InvalidOperationException("Sale is already cancelled");
 
         IsCancelled = true;
+        _domainEvents.Add(new SaleCancelledEvent(Id, DateTime.UtcNow));
     }
 
     /// <summary>
@@ -88,6 +99,7 @@ public class Sale : BaseEntity
 
         item.Cancel();
         CalculateTotalAmount();
+        _domainEvents.Add(new SaleItemCancelledEvent(Id, itemId, DateTime.UtcNow));
     }
 
     /// <summary>
@@ -112,4 +124,5 @@ public class Sale : BaseEntity
     {
         return $"SALE-{DateTime.UtcNow:yyyyMMdd}-{Guid.NewGuid().ToString()[..8].ToUpper()}";
     }
+    
 }
