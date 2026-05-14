@@ -33,11 +33,16 @@ public class SaleItem : BaseEntity
         if (quantity <= 0)
             throw new ArgumentException("Quantity must be positive", nameof(quantity));
 
+        if (quantity > 20)
+            throw new ArgumentException("It's not possible to sell above 20 identical items", nameof(quantity));
+
         if (unitPrice <= 0)
             throw new ArgumentException("Unit price must be positive", nameof(unitPrice));
 
         if (discount < 0 || discount > 100)
             throw new ArgumentException("Discount must be between 0 and 100%", nameof(discount));
+        if (quantity < 4 && discount > 0)
+            throw new ArgumentException("Purchases below 4 items cannot have a discount");
 
         var item = new SaleItem
         {
