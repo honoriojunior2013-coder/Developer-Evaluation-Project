@@ -12,8 +12,7 @@ public record CreateSaleCommand(
 public record CreateSaleItemDto(
     string ProductName,
     int Quantity,
-    decimal UnitPrice,
-    decimal Discount
-);
+    decimal UnitPrice
+); 
 
 public record CreateSaleResponse(Guid Id, string SaleNumber);
