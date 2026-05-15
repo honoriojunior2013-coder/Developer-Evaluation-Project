@@ -1,9 +1,11 @@
+using MediatR;
+
 namespace Ambev.DeveloperEvaluation.Domain.Events;
 
 /// <summary>
 /// Interface para eventos de domínio, garantindo que todos os eventos tenham uma data de ocorrência.
 /// </summary>
-public interface IDomainEvent
+public interface IDomainEvent : INotification
 {
     DateTime OccurredOn { get; }
 }
