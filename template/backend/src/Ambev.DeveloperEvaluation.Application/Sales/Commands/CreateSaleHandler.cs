@@ -9,11 +9,21 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, CreateSaleRe
 {
     private readonly ISaleRepository _repository;
     private readonly ILogger<CreateSaleHandler> _logger;
+    private readonly IMediator _mediator;
+    private ISaleRepository object1;
+    private ILogger<CreateSaleHandler> object2;
 
-    public CreateSaleHandler(ISaleRepository repository, ILogger<CreateSaleHandler> logger)
+    public CreateSaleHandler(ISaleRepository object1, ILogger<CreateSaleHandler> object2)
+    {
+        this.object1 = object1;
+        this.object2 = object2;
+    }
+
+    public CreateSaleHandler(ISaleRepository repository, ILogger<CreateSaleHandler> logger, IMediator mediator)
     {
         _repository = repository;
         _logger = logger;
+        _mediator = mediator;
     }
 
     public async Task<CreateSaleResponse> Handle(CreateSaleCommand request, CancellationToken cancellationToken)
@@ -33,6 +43,12 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, CreateSaleRe
 
         await _repository.AddAsync(sale, cancellationToken);
         await _repository.SaveChangesAsync(cancellationToken);
+
+        foreach (var domainEvent in sale.DomainEvents)
+        {
+            await _mediator.Publish(domainEvent, cancellationToken);
+        }
+        sale.ClearDomainEvents();
 
         return new CreateSaleResponse(sale.Id, sale.SaleNumber);
     }
