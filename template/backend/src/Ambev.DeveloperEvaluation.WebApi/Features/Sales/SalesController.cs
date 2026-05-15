@@ -146,8 +146,10 @@ public class SalesController : ControllerBase
         await _mediator.Send(command, cancellationToken);
         return NoContent();
     }
-
-    [HttpGet] // Endpoint: GET /api/Sales
+    /// <summary>
+    /// Get List
+    /// </summary>
+    [HttpGet] 
     [ProducesResponseType(typeof(Ambev.DeveloperEvaluation.Application.Sales.Queries.PagedResult<SaleDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetSales([FromQuery] GetSalesQuery query, CancellationToken cancellationToken)
     {
