@@ -8,12 +8,9 @@ public class CreateSaleProfile : Profile
 {
     public CreateSaleProfile()
     {
-        // Request -> Command
-        CreateMap<CreateSaleRequest, CreateSaleCommand>();
-        CreateMap<CreateSaleItemRequest, CreateSaleItemDto>();
-
-        // Domain -> Response
-        CreateMap<Sale, CreateSaleResponse>();
-        CreateMap<SaleItem, CreateSaleItemResponse>();
+        // mapping correction
+        CreateMap<CreateSaleRequest, Application.Sales.Commands.CreateSaleCommand>();
+        CreateMap<CreateSaleItemRequest, Application.Sales.Commands.CreateSaleItemDto>();
+        CreateMap<Application.Sales.Commands.CreateSaleResponse, CreateSaleResponse>();
     }
 }

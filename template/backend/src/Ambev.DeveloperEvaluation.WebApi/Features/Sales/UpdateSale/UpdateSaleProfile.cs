@@ -9,7 +9,7 @@ public class UpdateSaleProfile : Profile
     public UpdateSaleProfile()
     {
         CreateMap<UpdateSaleRequest, UpdateSaleCommand>();
-        CreateMap<Sale, UpdateSaleResponse>()
-            .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.UtcNow));
+        CreateMap<Ambev.DeveloperEvaluation.Application.Sales.DTOs.SaleDto, UpdateSaleResponse>();
+
     }
 }
