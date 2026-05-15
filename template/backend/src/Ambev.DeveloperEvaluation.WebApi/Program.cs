@@ -1,11 +1,16 @@
 using Ambev.DeveloperEvaluation.Application;
+using Ambev.DeveloperEvaluation.Application.Sales.Commands;
+using Ambev.DeveloperEvaluation.Application.Sales.EventHandlers;
 using Ambev.DeveloperEvaluation.Common.HealthChecks;
 using Ambev.DeveloperEvaluation.Common.Logging;
 using Ambev.DeveloperEvaluation.Common.Security;
 using Ambev.DeveloperEvaluation.Common.Validation;
+using Ambev.DeveloperEvaluation.Domain.Repositories;
+using Ambev.DeveloperEvaluation.Infrastructure.Repositories;
 using Ambev.DeveloperEvaluation.IoC;
 using Ambev.DeveloperEvaluation.ORM;
 using Ambev.DeveloperEvaluation.WebApi.Middleware;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -42,12 +47,16 @@ public class Program
 
             builder.Services.AddAutoMapper(typeof(Program).Assembly, typeof(ApplicationLayer).Assembly);
 
+            // FluentValidation
+            builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+            builder.Services.AddValidatorsFromAssembly(typeof(CreateSaleCommandValidator).Assembly);
+
+            builder.Services.AddScoped<ISaleRepository, SaleRepository>();
+            
             builder.Services.AddMediatR(cfg =>
             {
-                cfg.RegisterServicesFromAssemblies(
-                    typeof(ApplicationLayer).Assembly,
-                    typeof(Program).Assembly
-                );
+                cfg.RegisterServicesFromAssembly(typeof(CreateSaleHandler).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(SaleCreatedEventHandler).Assembly);
             });
 
             builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
@@ -71,6 +80,7 @@ public class Program
             app.MapControllers();
 
             app.Run();
+            
         }
         catch (Exception ex)
         {
@@ -80,5 +90,7 @@ public class Program
         {
             Log.CloseAndFlush();
         }
+        
     }
+    
 }
