@@ -11,6 +11,7 @@ using CreateSaleApiResponse =   Ambev.DeveloperEvaluation.WebAPI.Features.Sales.
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Ambev.DeveloperEvaluation.Application.Sales.DTOs;
 
 
 
@@ -144,5 +145,14 @@ public class SalesController : ControllerBase
         var command = new CancelSaleItemCommand(saleId, itemId);
         await _mediator.Send(command, cancellationToken);
         return NoContent();
+    }
+
+    [HttpGet] // Endpoint: GET /api/Sales
+    [ProducesResponseType(typeof(Ambev.DeveloperEvaluation.Application.Sales.Queries.PagedResult<SaleDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetSales([FromQuery] GetSalesQuery query, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(query, cancellationToken);
+        
+        return Ok(result);
     }
 }
