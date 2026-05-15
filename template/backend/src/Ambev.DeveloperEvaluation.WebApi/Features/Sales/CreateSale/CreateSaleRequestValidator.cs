@@ -39,7 +39,5 @@ public class CreateSaleItemRequestValidator : AbstractValidator<CreateSaleItemRe
         RuleFor(x => x.UnitPrice)
             .GreaterThan(0).WithMessage("Unit price must be greater than zero");
 
-        RuleFor(x => x.Discount)
-            .InclusiveBetween(0, 100).WithMessage("Discount must be between 0 and 100%");
     }
 }
